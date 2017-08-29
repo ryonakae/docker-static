@@ -1,2 +1,1 @@
-# ryonakae.com
-http://ryonakae.com
+# dncngrl-static

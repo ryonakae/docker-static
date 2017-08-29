@@ -1,18 +1,44 @@
 version: '2'
 services:
-  apache:
+  httpd:
     image: httpd:2.4.27-alpine
-    container_name: ryonakae-com-apache
+    container_name: dncngrl-static-httpd
     ports:
       - 8083:80
     restart: always
     tty: false
     env_file: .env
     volumes:
-      - ./public:/usr/local/apache2/htdocs:ro
+      - ./upload:/usr/local/apache2/htdocs:ro
     networks:
       - front
+      - back-dncngrl-static
+
+  sftp:
+    image: atmoz/sftp:alpine
+    container_name: dncngrl-static-sftp
+    ports:
+      - '2222:22'
+    volumes:
+      - ./upload:/home/foo/upload
+    command: foo:pass:1001
+    networks:
+      - back-dncngrl-static
+
+  # data:
+  #   image: busybox:1.27.1-musl
+  #   container_name: dncngrl-static-data
+  #   volumes:
+  #     - dncngrl-static-data:/usr/local/apache2/htdocs
+  #   networks:
+  #     - back-dncngrl-static
+
+# volumes:
+#   dncngrl-static-data:
+#     external: true
 
 networks:
   front:
+    external: true
+  back-dncngrl-static:
     external: true
