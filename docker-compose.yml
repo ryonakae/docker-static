@@ -1,0 +1,18 @@
+version: '2'
+services:
+  apache:
+    image: httpd:2.4.27-alpine
+    container_name: ryonakae-com-apache
+    ports:
+      - 8083:80
+    restart: always
+    tty: false
+    env_file: .env
+    volumes:
+      - ./public:/usr/local/apache2/htdocs:ro
+    networks:
+      - front
+
+networks:
+  front:
+    external: true
