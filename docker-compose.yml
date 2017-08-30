@@ -2,7 +2,7 @@ version: '2'
 services:
   httpd:
     image: httpd:2.4.27-alpine
-    container_name: ${CONTAINER_NAME_PREFIX}-static-httpd
+    container_name: ${SFTP_USER_NAME}-static-httpd
     ports:
       - ${VIRTUAL_PORT}:80
     restart: always
@@ -19,7 +19,7 @@ services:
 
   sftp:
     image: atmoz/sftp:alpine
-    container_name: ${CONTAINER_NAME_PREFIX}-static-sftp
+    container_name: ${SFTP_USER_NAME}-static-sftp
     ports:
       - '${SFTP_PORT}:22'
     volumes_from:
@@ -30,7 +30,7 @@ services:
 
   data:
     image: busybox:1.27.1-musl
-    container_name: ${CONTAINER_NAME_PREFIX}-static-data
+    container_name: ${SFTP_USER_NAME}-static-data
     volumes:
       - static-data:/home/${SFTP_USER_NAME}
       - ./ssh/${SFTP_PUBLIC_KEY_NAME}:/home/${SFTP_USER_NAME}/.ssh/keys/${SFTP_PUBLIC_KEY_NAME}:ro
@@ -40,7 +40,8 @@ services:
 
 volumes:
   static-data:
-    external: true
+    external:
+      name: ${SFTP_USER_NAME}-static-data
 
 networks:
   front:

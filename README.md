@@ -5,15 +5,17 @@
 $ docker network create --driver bridge back-static
 ```
 
-## ボリューム作成
-```
-$ docker volume create --name=static-data
-```
-
 ## .envファイル設置・編集
 ```
 # sampleをコピーして編集
 $ cp .env-sample .env
+```
+
+## ボリューム作成
+`SFTP_USER_NAME`は、`.env`に書いた値
+
+```
+$ docker volume create --name=SFTP_USER_NAME-static-data
 ```
 
 ## Apacheの設定ファイル編集
