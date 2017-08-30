@@ -8,8 +8,8 @@ services:
     restart: always
     tty: false
     env_file: .env
-    volumes:
-      - ./upload:/usr/local/apache2/htdocs:ro
+    volumes_from:
+      - sftp
     networks:
       - front
       - back-dncngrl-static
@@ -19,23 +19,25 @@ services:
     container_name: dncngrl-static-sftp
     ports:
       - '2222:22'
-    volumes:
-      - ./upload:/home/foo/upload
-    command: foo:pass:1001
+    volumes_from:
+      - data
+    command: ryo:pass:1001:100:htdocs
     networks:
       - back-dncngrl-static
 
-  # data:
-  #   image: busybox:1.27.1-musl
-  #   container_name: dncngrl-static-data
-  #   volumes:
-  #     - dncngrl-static-data:/usr/local/apache2/htdocs
-  #   networks:
-  #     - back-dncngrl-static
+  data:
+    image: busybox:1.27.1-musl
+    container_name: dncngrl-static-data
+    volumes:
+      - dncngrl-static-data:/home/ryo
+      - ./backup:/backup
+      # - ./setting/sftp/sftp.d/fix_owner.sh:/etc/sftp.d/fix_owner.sh:ro
+    networks:
+      - back-dncngrl-static
 
-# volumes:
-#   dncngrl-static-data:
-#     external: true
+volumes:
+  dncngrl-static-data:
+    external: true
 
 networks:
   front:
