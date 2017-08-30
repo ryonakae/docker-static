@@ -10,6 +10,8 @@ services:
     env_file: .env
     volumes_from:
       - sftp
+    volumes:
+      - ./setting/apache2/conf/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
     networks:
       - front
       - back-dncngrl-static
@@ -21,7 +23,7 @@ services:
       - '2222:22'
     volumes_from:
       - data
-    command: ryo:pass:1001:100:htdocs
+    command: ryo::1001:100:htdocs
     networks:
       - back-dncngrl-static
 
@@ -30,8 +32,8 @@ services:
     container_name: dncngrl-static-data
     volumes:
       - dncngrl-static-data:/home/ryo
+      - ./ssh/dncngrl_static_rsa.pub:/home/ryo/.ssh/keys/dncngrl_static_rsa.pub:ro
       - ./backup:/backup
-      # - ./setting/sftp/sftp.d/fix_owner.sh:/etc/sftp.d/fix_owner.sh:ro
     networks:
       - back-dncngrl-static
 
