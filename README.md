@@ -1,25 +1,32 @@
-# dncngrl-static
+# docker-static
 
 ## ネットワーク作成
 ```
-$ docker network create --driver bridge back-dncngrl-static
+$ docker network create --driver bridge back-static
 ```
 
 ## ボリューム作成
 ```
-$ docker volume create --name=dncngrl-static-data
+$ docker volume create --name=static-data
 ```
 
-## .envファイル設置
+## .envファイル設置・編集
 ```
 # sampleをコピーして編集
 $ cp .env-sample .env
 ```
 
+## Apacheの設定ファイル編集
+```
+# sampleをコピーして編集
+$ cd setting/apache2/conf.d
+$ cp my_setting-sample.conf my_setting.conf
+```
+
 ## 公開鍵の設置
-* 事前にローカルで`dncngrl_static_rsa`、`dncngrl_static_rsa.pub`を作成しておく
-* SCPとかで`./ssh`に`dncngrl_static_rsa.pub`を設置する
-* ローカルからSFTPでログインする際に秘密鍵として`dncngrl_static_rsa`を使用する
+* 事前にローカルで`docker_static_rsa`、`docker_static_rsa.pub`を作成しておく
+* SCPとかで`./ssh`に`docker_static_rsa.pub`を設置する
+* ローカルからSFTPでログインする際に秘密鍵として`docker_static_rsa`を使用する
 
 ## データのバックアップ/リストア
 ```

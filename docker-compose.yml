@@ -2,9 +2,9 @@ version: '2'
 services:
   httpd:
     image: httpd:2.4.27-alpine
-    container_name: dncngrl-static-httpd
+    container_name: ${CONTAINER_NAME_PREFIX}-static-httpd
     ports:
-      - 8083:80
+      - ${VIRTUAL_PORT}:80
     restart: always
     tty: false
     env_file: .env
@@ -12,37 +12,38 @@ services:
       - sftp
     volumes:
       - ./setting/apache2/conf/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - ./setting/apache2/conf.d/my_setting.conf:/usr/local/apache2/conf.d/my_setting.conf:ro
     networks:
       - front
-      - back-dncngrl-static
+      - back-static
 
   sftp:
     image: atmoz/sftp:alpine
-    container_name: dncngrl-static-sftp
+    container_name: ${CONTAINER_NAME_PREFIX}-static-sftp
     ports:
-      - '2222:22'
+      - '${SFTP_PORT}:22'
     volumes_from:
       - data
-    command: ryo::1001:100:htdocs
+    command: ${SFTP_USER_NAME}::1001:100:htdocs
     networks:
-      - back-dncngrl-static
+      - back-static
 
   data:
     image: busybox:1.27.1-musl
-    container_name: dncngrl-static-data
+    container_name: ${CONTAINER_NAME_PREFIX}-static-data
     volumes:
-      - dncngrl-static-data:/home/ryo
-      - ./ssh/dncngrl_static_rsa.pub:/home/ryo/.ssh/keys/dncngrl_static_rsa.pub:ro
+      - static-data:/home/${SFTP_USER_NAME}
+      - ./ssh/${SFTP_PUBLIC_KEY_NAME}:/home/${SFTP_USER_NAME}/.ssh/keys/${SFTP_PUBLIC_KEY_NAME}:ro
       - ./backup:/backup
     networks:
-      - back-dncngrl-static
+      - back-static
 
 volumes:
-  dncngrl-static-data:
+  static-data:
     external: true
 
 networks:
   front:
     external: true
-  back-dncngrl-static:
+  back-static:
     external: true

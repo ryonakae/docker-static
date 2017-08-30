@@ -3,3 +3,4 @@
 
 ssh
 backup
+setting/apache2/conf.d/my_setting.conf
